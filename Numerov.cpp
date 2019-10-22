@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <cstdio>
+#include <fstream>
+#include <cstring>
 
 void PrintVector( const std::vector <int>& a);
 void recibirVector( std::vector <int>& a);
@@ -11,19 +13,39 @@ int g2 = 200;
 int main (void)
 {
     int N=1000;
-    std::vector <double> Psi(N);
-    double ep = -0.9;
-    std::vector <double> k2(N);
-    Potential(k2, N, ep);
     double l2 = (1.0/(N-1))*(1.0/(N-1));
+    double dep=0.001; //Variacion del ep
+    double tol=1e-05;
+    std::vector <double> k2(N);
+    std::vector <double> Psi(N);
+    double ep = -0.99;
     Psi[0]=0;
-    Psi[1]=0.0001;
-    WaveFunc(Psi,k2,N,l2);
-    freopen("data.txt","w",stdout);
-    for(double ii=0.0; ii<N; ii++)
+    Psi[1]=0.01;
+    int ii=1;
+    std::string name="data";
+    std::string ext=".txt";
+    while(ii<=10)
     {
-        std::cout<<ii/N<<"\t"<<Psi[ii]<<std::endl;
+        Potential(k2, N, ep);
+        WaveFunc(Psi,k2,N,l2);
+        if(Psi[N-1]<tol)
+        {
+            std::string num=std::to_string(ii);
+            std::string file=name+num+ext;
+            char cstr[file.size() + 1];
+            strcpy(cstr, file.c_str());
+            freopen(cstr,"w",stdout);
+            for(double jj=0; jj<N; jj++)
+            {
+
+                std::cout<<jj/N<<"\t"<<Psi[jj]<<std::endl;
+            }
+            ii+=1;
+        }
+        ep+=dep;
     }
+    
+    
     
     return 0;
 }
