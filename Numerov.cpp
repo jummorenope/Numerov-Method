@@ -6,25 +6,26 @@
 #include <cmath>
 #include <iomanip>
 
-void WaveFunc (std::vector <double>& Psi, std::vector <double> k2, int N, double l2);
-void Potential(std::vector <double>& k2,int N, double ep);
+void WaveFunc (std::vector <double>& Psi, std::vector <double> k2, double l2);
+void WaveNumber (std::vector <double>& k2, std::vector <double> V, double ep);
+void Potential (std::vector <double>& V);
 int g2 = 200;
+int N=1000;
 
 int main (void)
 {
     std::setprecision(10);
-    int N=1000;
     double l2 = (1.0/(N-1))*(1.0/(N-1));
     double dep=0.1; //Variacion del ep
     double tol=1e-9;
+    std::vector <double> V(N);
+    Potential(V);
     std::vector <double> k2(N);
     std::vector <double> Psi(N);
-    std::vector <double> eps(10);
     double ep = -0.99;
     Psi[0]=0;
     Psi[1]=0.0001;
     double Psi1=0;
-    //int ii=1;
     int write=1;
     std::string name="data";
     std::string ext=".txt";
@@ -32,15 +33,15 @@ int main (void)
     for( int ii=1;ii<=5;ii++)
     {
 
-        Potential(k2, N, ep);
-        WaveFunc(Psi,k2,N,l2);
+        WaveNumber(k2, V, ep);
+        WaveFunc(Psi,k2,l2);
         Psi1=Psi[N-1];
         
         while(std::fabs(Psi1)>tol)
         {
             ep+=dep;
-            Potential(k2, N, ep);
-            WaveFunc(Psi,k2,N,l2);
+            WaveNumber(k2, V, ep);
+            WaveFunc(Psi,k2,l2);
             if(Psi1*Psi[N-1]<=0)
             {
                 dep=-dep/2.0;
@@ -58,24 +59,29 @@ int main (void)
         dep=0.1;
         ep+=dep;
     }
-    
-    
-
     return 0;
 }
 
-void Potential(std::vector <double>& k2, int N, double ep)
+void WaveNumber(std::vector <double>& k2, std::vector <double> V, double ep)
 {
     for(int ii=0; ii<N; ii++)
     {
-        k2[ii]=g2*(ep+1);
+        k2[ii]=g2*(ep-V[ii]);
     }
 }
 
-void WaveFunc (std::vector <double>& Psi, std::vector <double> k2, int N, double l2)
+void WaveFunc (std::vector <double>& Psi, std::vector <double> k2, double l2)
 {
     for(int ii=2; ii<N; ii++)
     {
         Psi[ii] = (2*(1-(5.0/12)*l2*k2[ii-1])*Psi[ii-1]-(1+(1.0/12)*l2*k2[ii-2])*Psi[ii-2])/(1+(1.0/12)*l2*k2[ii]);
+    }
+}
+
+void Potential (std::vector <double>& V)
+{
+    for(int ii=0;ii<N;ii++)
+    {
+        V[ii]=-1.0;
     }
 }
