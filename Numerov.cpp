@@ -26,11 +26,10 @@ int main (void)
     Psi[0]=0;
     Psi[1]=0.0001;
     double Psi1=0;
-    int write=1;
     std::string name="data";
     std::string ext=".txt";
     
-    for( int ii=1;ii<=5;ii++)
+    for( int ii=1;ii<=3;ii++)
     {
 
         WaveNumber(k2, V, ep);
@@ -80,8 +79,9 @@ void WaveFunc (std::vector <double>& Psi, std::vector <double> k2, double l2)
 
 void Potential (std::vector <double>& V)
 {
-    for(int ii=0;ii<N;ii++)
+    for(double ii=0;ii<N;ii++)
     {
         V[ii]=-1.0;
+        //V[ii]=8*(ii/N-0.5)*(ii/N-0.5)-1.0;
     }
 }
