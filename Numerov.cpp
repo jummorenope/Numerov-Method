@@ -88,8 +88,8 @@ void Potential (std::vector <double>& V)
 {
     for(double ii=0;ii<N;ii++)
     {
-        //V[ii]=-1.0;
-        V[ii]=30*(ii/N-0.5)*(ii/N-0.5)-1.0;
+        V[ii]=-1.0;
+        //V[ii]=30*(ii/N-0.5)*(ii/N-0.5)-1.0;
         //V[ii]=8*(ii/N-0.5)*(ii/N-0.5)*(ii/N-0.5)*(ii/N-0.5)-1.0;
     }
 }
